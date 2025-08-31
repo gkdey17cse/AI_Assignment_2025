@@ -3,10 +3,10 @@
 
 #include "state.h"
 
-class HEURISTIC
+class Heuristic
 {
 public:
-    static int balance(const STATE &s);
+    static int balance(const State &s);
 };
 
 #endif

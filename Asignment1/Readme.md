@@ -6,21 +6,25 @@ We are tasked with solving the **container loading problem** for a ship. Contain
 
 1. **Destination Constraint**:
 
-   * Containers destined for earlier ports must not be blocked by containers for later ports.
-   * Modeled by destination rank (integer). Smaller rank = earlier port.
-   * Valid stacks = non-increasing destination order from bottom → top.
+   - Containers destined for earlier ports must not be blocked by containers for later ports.
+   - Modeled by destination rank (integer). Smaller rank = earlier port.
+   - Valid stacks = non-increasing destination order from bottom → top.
+
+```bash
+Cost=LoadingCost+UnloadingPenalty+ReshufflePenalty
+```
 
 2. **Balance Constraint**:
 
-   * The ship must not become too imbalanced during loading.
-   * The difference in total weight between **Port** and **Starboard** sides must not exceed a given balance factor.
-   * Balance is checked after each placement.
+   - The ship must not become too imbalanced during loading.
+   - The difference in total weight between **Port** and **Starboard** sides must not exceed a given balance factor.
+   - Balance is checked after each placement.
 
 **Goal**: Find a loading plan that respects these constraints and **minimizes cost**, where cost includes:
 
-* Base load/unload cost (per container).
-* Penalty for unloading conflicts (blocking).
-* Penalty for reshuffling (if required).
+- Base load/unload cost (per container).
+- Penalty for unloading conflicts (blocking).
+- Penalty for reshuffling (if required).
 
 ---
 
@@ -28,13 +32,14 @@ We are tasked with solving the **container loading problem** for a ship. Contain
 
 #### **1. Problem Modeling**
 
-* **State** = current ship configuration (stack contents), remaining containers, current weight difference.
-* **Actions** = place one container into a valid stack (Port/Starboard, any bay).
-* **Constraints** =
+- **State** = current ship configuration (stack contents), remaining containers, current weight difference.
+- **Actions** = place one container into a valid stack (Port/Starboard, any bay).
+- **Constraints** =
 
-  * Destination order rule.
-  * Balance limit rule.
-* **Objective Function**:
+  - Destination order rule.
+  - Balance limit rule.
+
+- **Objective Function**:
 
   $$
   \text{Cost} = \alpha \cdot \text{LoadingCost} + \beta \cdot \text{UnloadingPenalty} + \gamma \cdot \text{ReshufflePenalty}
@@ -59,7 +64,7 @@ reshufflePenalty = 5
 containers = (C1,10,1) (C2,20,2) (C3,15,1) (C4,25,3)
 ```
 
-* `(ID, Weight, DestinationRank)` per container.
+- `(ID, Weight, DestinationRank)` per container.
 
 ---
 
@@ -67,9 +72,9 @@ containers = (C1,10,1) (C2,20,2) (C3,15,1) (C4,25,3)
 
 For each search algorithm, output will include:
 
-* Sequence of placements (which container → which side & bay).
-* Final configuration of ship (stacks per bay).
-* Total cost of the plan.
+- Sequence of placements (which container → which side & bay).
+- Final configuration of ship (stacks per bay).
+- Total cost of the plan.
 
 ---
 
@@ -77,11 +82,11 @@ For each search algorithm, output will include:
 
 We will implement and test:
 
-* **DFS** (Depth First Search)
-* **BFS** (Breadth First Search)
-* **IDDFS** (Iterative Deepening DFS)
-* **Greedy Best-First Search** (heuristic = minimize blocking + imbalance)
-* **A\*** (optimal under admissible heuristic)
+- **DFS** (Depth First Search)
+- **BFS** (Breadth First Search)
+- **IDDFS** (Iterative Deepening DFS)
+- **Greedy Best-First Search** (heuristic = minimize blocking + imbalance)
+- **A\*** (optimal under admissible heuristic)
 
 ---
 
@@ -105,6 +110,10 @@ ContainerLoadingProblem/
 │── input.txt
 │
 ├── include/
+|   ├── include/
+|   |   ├── search/
+|   |         ├── bfs.h
+|   |         ├── container.h
 │   ├── state.h
 │   ├── search.h
 │   ├── heuristic.h
@@ -130,14 +139,13 @@ ContainerLoadingProblem/
 
 ### 📊 Evaluation
 
-* Compare different search algorithms on the same `input.txt`.
-* Metrics:
+- Compare different search algorithms on the same `input.txt`.
+- Metrics:
 
-  * **Validity** (constraints satisfied).
-  * **Total cost**.
-  * **Runtime** (optional).
+  - **Validity** (constraints satisfied).
+  - **Total cost**.
+  - **Runtime** (optional).
 
 ---
 
 ✅ This README + directory structure is clean, modular, and aligned with the assignment.
-

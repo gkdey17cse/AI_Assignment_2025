@@ -1,0 +1,16 @@
+Algorithm: BFS
+
+Final Stacks:
+Bay 0: (10,1) (20,1) (25,2) (5,2) 
+Bay 1: (35,2) (30,3) (15,3) (10,4) 
+Bay 2: 
+Bay 3: 
+Bay 4: 
+Bay 5: 
+Bay 6: 
+Bay 7: 
+
+Cost Breakdown:
+Placement cost: 8
+Penalty cost: 16
+Total cost: 24

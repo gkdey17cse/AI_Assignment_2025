@@ -1,24 +1,31 @@
 #ifndef STATE_H
 #define STATE_H
+
 #include <vector>
 #include <string>
 using namespace std;
-class STATE
+
+// Simple struct for a container
+struct Container
+{
+    int weight;
+    int dest_rank;
+};
+
+class State
 {
 public:
-    vector<int> containers; // presents all the containers
-    int side;               // sides are two // 1. port and another is 2. standbord
-    int height;             // height means max no of container in each bays
+    vector<Container> containers; // all containers
+    int side;                     // number of bays per side
+    int height;                   // max containers per bay
+    int balanceLimit = 1000000;   // default large value
+    int loadCost = 1;             // default cost per container load
 
-    STATE()
-    {
-        this->side = 0,
-        this->height = 0;
-    }
+    State() : side(0), height(0), balanceLimit(1000000), loadCost(1) {}
 
-    void print() const; // print state in the consule
-
-    string to_string() const; // convert state to string for saving purpose
+    void print() const;
+    string to_string() const;
 };
+
 
 #endif
