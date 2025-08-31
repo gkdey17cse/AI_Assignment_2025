@@ -1,0 +1,48 @@
+AI Course Monsoon 2025 
+
+HW0 Turing Paper: Gour Krishna Dey gour24035@iiitd.ac.in 
+
+Turing discusses different objections to the idea of thinking machines.  Which of the following objections does he address and attempt to refute?
+
+✓The argument that machines lack consciousness and subjective experience.
+
+✓The argument that machines lack the capacity for surprise or originality.
+
+✓The argument from the physical differences between electrical machines and the human nervous system.
+
+✓The argument that machines cannot learn or adapt to new situations.
+
+
+What is the significance of Godel's Theorem in the context of Turing's argument, according to him?
+
+ It proves that machines are fundamentally incapable of original thought.
+
+✓It demonstrates limitations in the capabilities of discrete-state machines, but does not necessarily imply similar limitations for human intellect.
+
+ It supports the theological objection by showing the inherent limitations of a created entity.
+
+ It highlights the importance of continuous-state machines in mimicking human intelligence.
+
+
+What was the original 'imitation game' on which Turing modelled his 'test for intelligence'?
+
+ A party game where two people, hidden from the audience and communicating only via written means, debate a topic and the audience judges who has won the debate.
+
+ A party game where two people, hidden from the audience and communicating only via written means, try to convince the judge that one is more intelligent than the other.
+
+✓A party game where a man and a woman, hidden from the audience and communicating only via written means, try to convince the judge that each is of the opposite gender that who they realy are.
+
+ A party game where two people, hidden from the audience and communicating only via written means, try to convince the judge that they are human and not machines.
+
+
+What are the key limitations of discrete-state machines as discussed by Turing, and how does he address potential objections related to these limitations?
+
+✓Godel's theorem shows inherent limitations in their logical capabilities; Turing argues this doesn't inherently exclude human intelligence.
+
+✓Their finite nature restricts their capacity for diverse and unpredictable behavior; Turing counters with the concept of scalable storage and learning.
+
+✓They are therefore incapable of consciousness or subjective experience, negating the possibility of true intelligence; Turing argues that understanding consciousness is not neccesary to simulate intelligence in a machine.
+
+✓They rely on deterministic rules, making true creativity impossible; Turing suggests that even machines relying on deterministic rules will eventually be able to compose poetry.
+
+

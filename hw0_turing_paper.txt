@@ -1,0 +1,48 @@
+AI Course Monsoon 2025 
+
+HW0 Turing Paper: Gour Krishna Dey gour24035@iiitd.ac.in 
+
+In Turing's discussion of learning machines, what concepts does he draw parallels with to explain the learning process?
+
+ The evolution of species through natural selection.
+
+ The growth of a crystal from a seed.
+
+✓The development of a child's mind through education.
+
+ The construction of a building from blueprints.
+
+
+In Turing's refutation the objection that a machine 'can only do what they are told', and so cannot 'think', what analogy does he use to illustrate the concept of a 'supercritical' machine, i.e., emergent behaviour, or the whole being more than its parts?
+
+✓An atomic pile reaching critical mass.
+
+ A piano string struck by a hammer.
+
+ The layers of an onion.
+
+ A child's mind developing over time.
+
+
+Turing discusses different objections to the idea of thinking machines.  Which of the following objections does he address and attempt to refute?
+
+ The argument that machines lack consciousness and subjective experience.
+
+✓The argument that machines lack the capacity for surprise or originality.
+
+✓The argument from the physical differences between electrical machines and the human nervous system.
+
+✓The argument that machines cannot learn or adapt to new situations.
+
+
+What is the significance of Godel's Theorem in the context of Turing's argument, according to him?
+
+ It proves that machines are fundamentally incapable of original thought.
+
+✓It demonstrates limitations in the capabilities of discrete-state machines, but does not necessarily imply similar limitations for human intellect.
+
+ It supports the theological objection by showing the inherent limitations of a created entity.
+
+ It highlights the importance of continuous-state machines in mimicking human intelligence.
+
+
