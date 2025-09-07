@@ -1,0 +1,104 @@
+Container Loading Problem Run
+num_stacks=4 max_height=3 balance_limit=15
+n_containers=6
+Containers listing (cid weight dest):
+0 5 1
+1 7 2
+2 4 1
+3 6 3
+4 8 2
+5 3 1
+
+=== Running BFS (hard constraints, full search limited by node limit) ===
+Solution found.
+Nodes expanded: 8986
+Time (ms): 71.4435
+Loads performed: 6 (each load cost=1)
+Destination blocks: 1
+Weight inversions: 0
+Balance violations: 0 (should be 0 since balance is hard)
+Total violations (for reporting): 1 (penalty each = 2)
+Total cost = 8
+Load sequence (cid weight dest -> stack):
+1. cid=0 (w=5 d=1) -> stack 0
+2. cid=1 (w=7 d=2) -> stack 1
+3. cid=2 (w=4 d=1) -> stack 2
+4. cid=3 (w=6 d=3) -> stack 1
+5. cid=4 (w=8 d=2) -> stack 3
+6. cid=5 (w=3 d=1) -> stack 0
+Final stacks:
+Stack 0: 0(5,1) 5(3,1) 
+Stack 1: 1(7,2) 3(6,3) 
+Stack 2: 2(4,1) 
+Stack 3: 4(8,2) 
+Violation details:
+Stack 0 (bottom->top): 0(5,1) 5(3,1) 
+Stack 1 (bottom->top): 1(7,2) 3(6,3) 
+Stack 2 (bottom->top): 2(4,1) 
+Stack 3 (bottom->top): 4(8,2) 
+DEST-BLOCK stack 1 below 1 blocked by 3
+Totals: dest-blocks=1 wt-viol=0 balance-viol=0
+Total violations (for reporting) = 1 (penalty each=2)
+
+=== Running Greedy Best-First (hard constraints, heuristic) ===
+Solution found.
+Nodes expanded: 45
+Time (ms): 0.5018
+Loads performed: 6 (each load cost=1)
+Destination blocks: 0
+Weight inversions: 0
+Balance violations: 0 (should be 0 since balance is hard)
+Total violations (for reporting): 0 (penalty each = 2)
+Total cost = 6
+Load sequence (cid weight dest -> stack):
+1. cid=0 (w=5 d=1) -> stack 0
+2. cid=1 (w=7 d=2) -> stack 1
+3. cid=3 (w=6 d=3) -> stack 3
+4. cid=2 (w=4 d=1) -> stack 0
+5. cid=4 (w=8 d=2) -> stack 2
+6. cid=5 (w=3 d=1) -> stack 0
+Final stacks:
+Stack 0: 0(5,1) 2(4,1) 5(3,1) 
+Stack 1: 1(7,2) 
+Stack 2: 4(8,2) 
+Stack 3: 3(6,3) 
+Violation details:
+Stack 0 (bottom->top): 0(5,1) 2(4,1) 5(3,1) 
+Stack 1 (bottom->top): 1(7,2) 
+Stack 2 (bottom->top): 4(8,2) 
+Stack 3 (bottom->top): 3(6,3) 
+Totals: dest-blocks=0 wt-viol=0 balance-viol=0
+Total violations (for reporting) = 0 (penalty each=2)
+
+=== Running A* (hard constraints, improved heuristic) ===
+Solution found.
+Nodes expanded: 45
+Time (ms): 0.5101
+Loads performed: 6 (each load cost=1)
+Destination blocks: 0
+Weight inversions: 0
+Balance violations: 0 (should be 0 since balance is hard)
+Total violations (for reporting): 0 (penalty each = 2)
+Total cost = 6
+Load sequence (cid weight dest -> stack):
+1. cid=0 (w=5 d=1) -> stack 0
+2. cid=1 (w=7 d=2) -> stack 1
+3. cid=3 (w=6 d=3) -> stack 3
+4. cid=2 (w=4 d=1) -> stack 0
+5. cid=4 (w=8 d=2) -> stack 2
+6. cid=5 (w=3 d=1) -> stack 0
+Final stacks:
+Stack 0: 0(5,1) 2(4,1) 5(3,1) 
+Stack 1: 1(7,2) 
+Stack 2: 4(8,2) 
+Stack 3: 3(6,3) 
+Violation details:
+Stack 0 (bottom->top): 0(5,1) 2(4,1) 5(3,1) 
+Stack 1 (bottom->top): 1(7,2) 
+Stack 2 (bottom->top): 4(8,2) 
+Stack 3 (bottom->top): 3(6,3) 
+Totals: dest-blocks=0 wt-viol=0 balance-viol=0
+Total violations (for reporting) = 0 (penalty each=2)
+
+End of run.
+Done. Results printed to console and output.txt
