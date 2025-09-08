@@ -199,7 +199,7 @@ Enforces:
   - weight constraint: container.weight <= top.weight (or stack empty)
   - balance constraint after placement: abs(left-right) <= balanceLim
 */
-vector<Action> possible_actions_hard(const State &cur)  // all possible moves
+vector<Action> possible_actions_hard(const State &cur) // all possible moves
 {
     vector<Action> acts;
     // current left/right weights
@@ -246,9 +246,9 @@ vector<Action> possible_actions_hard(const State &cur)  // all possible moves
 bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = bfsNodeLim)
 {
     queue<State> q;
-    unordered_set<string> visited;  // stores visited
+    unordered_set<string> visited; // stores visited
     parent_map.clear();
-    expanded_nodes = 0;  // no of expanded nodes 
+    expanded_nodes = 0; // no of expanded nodes
 
     string sk = state_key(start);
     q.push(start);
@@ -275,7 +275,7 @@ bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_ma
             State nxt = cur;
             nxt.stacks[a.stack_id].push_back(a.cid);
             nxt.loadedMask |= (1u << a.cid);
-            nxt.g_cost = cur.g_cost + loadingUnloadingCost;
+            nxt.g_cost = cur.g_cost + loadingUnloadingCost * 2; // Loading + unloading cost
             string k = state_key(nxt);
             if (visited.insert(k).second)
             {
@@ -288,7 +288,7 @@ bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_ma
 }
 
 // ---------- Greedy best-first (hard constraints) ----------
-struct PQNodeG  // creating a Priority Queue data structure to store state & h
+struct PQNodeG // creating a Priority Queue data structure to store state & h
 {
     State st;
     int h;
@@ -297,7 +297,6 @@ struct PQCmpG
 {
     bool operator()(const PQNodeG &a, const PQNodeG &b) const { return a.h > b.h; }
 };
-
 
 // lower the heuristic explore it first
 bool Greedy_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = bfsNodeLim)
@@ -334,7 +333,7 @@ bool Greedy_search(State start, State &goal_out, map<string, ParentInfo> &parent
             State nxt = cur;
             nxt.stacks[a.stack_id].push_back(a.cid);
             nxt.loadedMask |= (1u << a.cid);
-            nxt.g_cost = cur.g_cost + loadingUnloadingCost;
+            nxt.g_cost = cur.g_cost + loadingUnloadingCost * 2; // Loading + unloading cost
             string k = state_key(nxt);
             if (visited.count(k))
                 continue;
@@ -370,6 +369,7 @@ bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_
 {
     priority_queue<ANode, vector<ANode>, ACmp> pq;
     unordered_map<string, int> bestg;
+
     parent_map.clear();
     expanded_nodes = 0;
 
@@ -404,7 +404,7 @@ bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_
             State nxt = cur;
             nxt.stacks[a.stack_id].push_back(a.cid);
             nxt.loadedMask |= (1u << a.cid);
-            int newg = curg + loadingUnloadingCost;
+            int newg = curg + loadingUnloadingCost * 2; // Loading + unloading cost
             string k = state_key(nxt);
             if (bestg.count(k) && newg >= bestg[k])
                 continue;
@@ -464,8 +464,8 @@ void run_and_report(DualOut &out, const string &name,
     auto dv = count_dest_and_weight_violations(goal);
     int balv = count_balance_violation(goal);
     int total_viol = dv.first + dv.second + balv;
-    int total_cost = loads * loadingUnloadingCost + total_viol * penaltyCost;
-    out << "Loads performed: " << loads << " (each load cost=" << loadingUnloadingCost << ")\n";
+    int total_cost = loads * loadingUnloadingCost * 2 + total_viol * penaltyCost; // Loading + unloading cost for each container
+    out << "Loads performed: " << loads << " (each load+unload cost=" << loadingUnloadingCost * 2 << ")\n";
     out << "Destination blocks: " << dv.first << "\n";
     out << "Weight inversions: " << dv.second << "\n";
     out << "Balance violations: " << balv << " (should be 0 since balance is hard)\n";

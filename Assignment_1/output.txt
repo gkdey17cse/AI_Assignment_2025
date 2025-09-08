@@ -12,7 +12,7 @@ Containers listing (cid weight dest):
 === Running BFS (hard constraints, full search limited by node limit) ===
 Solution found.
 Nodes expanded: 8986
-Time (ms): 77.0606
+Time (ms): 74.0352
 Loads performed: 6 (each load+unload cost=2)
 Destination blocks: 1
 Weight inversions: 0
@@ -43,7 +43,7 @@ Total violations (for reporting) = 1 (penalty each=2)
 === Running Greedy Best-First (hard constraints, heuristic) ===
 Solution found.
 Nodes expanded: 45
-Time (ms): 0.5825
+Time (ms): 0.5357
 Loads performed: 6 (each load+unload cost=2)
 Destination blocks: 0
 Weight inversions: 0
@@ -73,7 +73,7 @@ Total violations (for reporting) = 0 (penalty each=2)
 === Running A* (hard constraints, improved heuristic) ===
 Solution found.
 Nodes expanded: 7330
-Time (ms): 96.2267
+Time (ms): 86.849
 Loads performed: 6 (each load+unload cost=2)
 Destination blocks: 0
 Weight inversions: 0
