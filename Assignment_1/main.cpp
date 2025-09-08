@@ -1,56 +1,51 @@
 // main.cpp
 // Container loading problem - single file
 // - 4 stacks fixed: stacks 0-1 = left/port, 2-3 = right/starboard
-// - Hard constraints enforced: balance (left/right diff <= BALANCE_LIMIT), max height, and weight (no heavier above lighter)
+// - Hard constraints enforced: balance (left/right diff <= balanceLim), max height, and weight (no heavier above lighter)
 // - BFS explores state space (with node limit), Greedy and A* use heuristics
 // - Prints to console and to output.txt
-//
-// Compile:
-//   g++ -std=c++17 -O2 -o main main.cpp
-// Run:
-//   ./main   (reads input.txt, writes output.txt)
 
 #include <bits/stdc++.h>
 using namespace std;
-using Clock = chrono::high_resolution_clock;
+using Clock = chrono::high_resolution_clock; // this is the clock for measuring time for each search
+// for no of stack = 4 & height = 4 , maximum 4*4  = 16 container can be stacked
+constexpr int stacksNum = 4; // number of total stack
+int maximumHeight = 4;       // max height of each container stack
+int balanceLim = 20;         // max balance diff to be allowed
+int N = 0;                   // total num of container later updated
 
-constexpr int NUM_STACKS = 4;
-int MAX_HEIGHT = 4;
-int BALANCE_LIMIT = 20;
-int N = 0;
+const int loadingUnloadingCost = 1; // cost for loading as well as unloading
+const int penaltyCost = 2;          // cost in csae of any pnealty added
+const int bfsNodeLim = 2000000;     // adjust as needed
 
-const int LOAD_COST = 1;
-const int PENALTY_UNIT = 2;
-const int BFS_NODE_LIMIT = 2000000; // adjust as needed
-
-struct Container
+struct Container // A structure of container that holds weight & destination prot Addres
 {
     int weight;
     int dest;
 };
-vector<Container> containers;
+vector<Container> containers; // define a vector of containers that will holds all container details
 
-struct Action
+struct Action // in our case Action : Place container C_id on stack stack_id"
 {
-    int cid;
-    int stack_id;
+    int cid;      // represents container ID (unique id for each container)
+    int stack_id; // each stack also has some id (we try to distribute stack equally in port & starboard of the boat)
 };
 
-struct State
+struct State // State is snaps of the boat , all stack for our example all 4 stack
 {
-    vector<vector<int>> stacks;
-    unsigned int loaded_mask = 0;
-    int g_cost = 0;
+    vector<vector<int>> stacks; // we represents stacks with bitmap 2 D bitmap
+    unsigned int loadedMask = 0;
+    int g_cost = 0; // cost so faar
 };
 
-struct ParentInfo
+struct ParentInfo // This is helpful when we use backtracking
 {
-    string parent_key = "";
+    string parentKey = "";
     Action action = {-1, -1};
     int g = 0;
 };
 
-// Dual output helper
+// Dual output helper handles text from files
 struct DualOut
 {
     ofstream fout;
@@ -84,12 +79,16 @@ struct DualOut
     }
 };
 
-// ---------- state key ----------
-string state_key(const State &st)
+// --- state key --------
+/*
+ Example - [0,1] , [2,] ,[] ,[] | #7
+ means - stack 0 has [0,1] container , stack 1 has 2nd container , stack 2 & 3 are empty & mask 7
+*/
+string state_key(const State &st) // helps to convert a state into a unique stringkey
 {
     string key;
     key.reserve(256);
-    for (int s = 0; s < NUM_STACKS; ++s)
+    for (int s = 0; s < stacksNum; ++s)
     {
         key.push_back('|');
         for (int c : st.stacks[s])
@@ -99,16 +98,16 @@ string state_key(const State &st)
         }
     }
     key += "#";
-    key += to_string(st.loaded_mask);
-    return key;
+    key += to_string(st.loadedMask);
+    return key; // to avoid re explorations
 }
 
-// ---------- violation counters (destination blocks, weight inversions) ----------
+// ------- violation counters - destination blocks, weight inverse ----------
 pair<int, int> count_dest_and_weight_violations(const State &st)
 {
-    int dest_block = 0;
-    int wt_viol = 0;
-    for (int s = 0; s < NUM_STACKS; ++s)
+    int destBlock = 0;
+    int weightViolation = 0; // no of eweight violation will be calculkated
+    for (int s = 0; s < stacksNum; ++s)
     {
         const auto &col = st.stacks[s];
         int h = (int)col.size();
@@ -118,15 +117,15 @@ pair<int, int> count_dest_and_weight_violations(const State &st)
             {
                 int below = col[i], above = col[j];
                 if (containers[below].dest < containers[above].dest)
-                    dest_block++;
+                    destBlock++;
                 if (containers[above].weight > containers[below].weight)
-                    wt_viol++;
+                    weightViolation++;
             }
         }
     }
-    return {dest_block, wt_viol};
+    return {destBlock, weightViolation};
 }
-
+// Calculate balance violation (strcit checking )
 int count_balance_violation(const State &st)
 {
     int left = 0, right = 0;
@@ -136,7 +135,7 @@ int count_balance_violation(const State &st)
     for (int i = 2; i < 4; ++i)
         for (int c : st.stacks[i])
             right += containers[c].weight;
-    return (abs(left - right) > BALANCE_LIMIT) ? 1 : 0;
+    return (abs(left - right) > balanceLim) ? 1 : 0; // return whether the difference of port & starboard in limit or not
 }
 
 int compute_total_violations(const State &st, bool include_balance)
@@ -145,13 +144,13 @@ int compute_total_violations(const State &st, bool include_balance)
     int total = p.first + p.second;
     if (include_balance)
         total += count_balance_violation(st);
-    return total;
+    return total; // return total violations
 }
 
-// ---------- pretty violation description ----------
+// -------- pretty violation description ----------
 void describe_violations(const State &st, DualOut &out)
 {
-    for (int s = 0; s < NUM_STACKS; ++s)
+    for (int s = 0; s < stacksNum; ++s)
     {
         out << "Stack " << s << " (bottom->top): ";
         for (int c : st.stacks[s])
@@ -168,7 +167,7 @@ void describe_violations(const State &st, DualOut &out)
             right += containers[c].weight;
 
     // list specifics
-    for (int s = 0; s < NUM_STACKS; ++s)
+    for (int s = 0; s < stacksNum; ++s)
     {
         const auto &col = st.stacks[s];
         int h = (int)col.size();
@@ -184,40 +183,42 @@ void describe_violations(const State &st, DualOut &out)
             }
         }
     }
-    if (abs(left - right) > BALANCE_LIMIT)
+    if (abs(left - right) > balanceLim) // Ig=f violates weight constraint
     {
-        out << "BAL-VIOL: left=" << left << " right=" << right << " limit=" << BALANCE_LIMIT << "\n";
+        out << "BAL-VIOL: left=" << left << " right=" << right << " limit=" << balanceLim << "\n";
     }
-    out << "Totals: dest-blocks=" << p.first << " wt-viol=" << p.second << " balance-viol=" << (abs(left - right) > BALANCE_LIMIT ? 1 : 0) << "\n";
-    out << "Total violations (for reporting) = " << (p.first + p.second + (abs(left - right) > BALANCE_LIMIT ? 1 : 0)) << " (penalty each=" << PENALTY_UNIT << ")\n";
+    // sumarizes total cost + penalty together
+    out << "Totals: dest-blocks=" << p.first << " wt-viol=" << p.second << " balance-viol=" << (abs(left - right) > balanceLim ? 1 : 0) << "\n";
+    out << "Total violations (for reporting) = " << (p.first + p.second + (abs(left - right) > balanceLim ? 1 : 0)) << " (penalty each=" << penaltyCost << ")\n";
 }
-
-// ---------- possible actions (enforce HARD constraints) ----------
-// Returns list of valid actions (placing a remaining container onto a stack)
-// Enforces:
-//   - stack not full
-//   - weight constraint: container.weight <= top.weight (or stack empty)
-//   - balance constraint after placement: abs(left-right) <= BALANCE_LIMIT
-vector<Action> possible_actions_hard(const State &cur)
+/*
+---------- possible actions (enforce HARD constraints) ----------
+Returns list of valid actions (placing a remaining container onto a stack)
+Enforces:
+  - stack not full
+  - weight constraint: container.weight <= top.weight (or stack empty)
+  - balance constraint after placement: abs(left-right) <= balanceLim
+*/
+vector<Action> possible_actions_hard(const State &cur)  // all possible moves
 {
     vector<Action> acts;
     // current left/right weights
     int left = 0, right = 0;
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; ++i) // as port & starboard two side fixed
         for (int c : cur.stacks[i])
             left += containers[c].weight;
     for (int i = 2; i < 4; ++i)
         for (int c : cur.stacks[i])
             right += containers[c].weight;
 
-    for (int cid = 0; cid < N; ++cid)
+    for (int cid = 0; cid < N; ++cid) // for each container
     {
-        if ((cur.loaded_mask >> cid) & 1u)
+        if ((cur.loadedMask >> cid) & 1u)
             continue;
         int w = containers[cid].weight;
-        for (int s = 0; s < NUM_STACKS; ++s)
+        for (int s = 0; s < stacksNum; ++s)
         {
-            if ((int)cur.stacks[s].size() >= MAX_HEIGHT)
+            if ((int)cur.stacks[s].size() >= maximumHeight)
                 continue;
             if (!cur.stacks[s].empty())
             {
@@ -230,21 +231,24 @@ vector<Action> possible_actions_hard(const State &cur)
                 new_left += w;
             else
                 new_right += w;
-            if (abs(new_left - new_right) > BALANCE_LIMIT)
+            if (abs(new_left - new_right) > balanceLim)
                 continue; // hard balance
             acts.push_back({cid, s});
         }
     }
-    return acts;
+    return acts; // will return an action
 }
 
-// ---------- BFS (hard constraints) ----------
-bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = BFS_NODE_LIMIT)
+// ------- BFS (hard constraints) ----------
+/*
+ Explopre all state - space level using queue <State>
+*/
+bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = bfsNodeLim)
 {
     queue<State> q;
-    unordered_set<string> visited;
+    unordered_set<string> visited;  // stores visited
     parent_map.clear();
-    expanded_nodes = 0;
+    expanded_nodes = 0;  // no of expanded nodes 
 
     string sk = state_key(start);
     q.push(start);
@@ -258,20 +262,20 @@ bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_ma
         expanded_nodes++;
         if (expanded_nodes > node_limit)
         {
-            return false; // node limit reached
+            return false; // node limit reached (we explicitly mainting it)
         }
-        if ((int)__builtin_popcount(cur.loaded_mask) == N)
+        if ((int)__builtin_popcount(cur.loadedMask) == N)
         {
             goal_out = cur;
             return true;
         }
-        auto acts = possible_actions_hard(cur);
+        auto acts = possible_actions_hard(cur); // return possible action
         for (const auto &a : acts)
         {
             State nxt = cur;
             nxt.stacks[a.stack_id].push_back(a.cid);
-            nxt.loaded_mask |= (1u << a.cid);
-            nxt.g_cost = cur.g_cost + LOAD_COST;
+            nxt.loadedMask |= (1u << a.cid);
+            nxt.g_cost = cur.g_cost + loadingUnloadingCost;
             string k = state_key(nxt);
             if (visited.insert(k).second)
             {
@@ -284,7 +288,7 @@ bool BFS_search(State start, State &goal_out, map<string, ParentInfo> &parent_ma
 }
 
 // ---------- Greedy best-first (hard constraints) ----------
-struct PQNodeG
+struct PQNodeG  // creating a Priority Queue data structure to store state & h
 {
     State st;
     int h;
@@ -294,7 +298,9 @@ struct PQCmpG
     bool operator()(const PQNodeG &a, const PQNodeG &b) const { return a.h > b.h; }
 };
 
-bool Greedy_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = BFS_NODE_LIMIT)
+
+// lower the heuristic explore it first
+bool Greedy_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = bfsNodeLim)
 {
     priority_queue<PQNodeG, vector<PQNodeG>, PQCmpG> pq;
     unordered_set<string> visited;
@@ -316,7 +322,7 @@ bool Greedy_search(State start, State &goal_out, map<string, ParentInfo> &parent
         expanded_nodes++;
         if (expanded_nodes > node_limit)
             return false;
-        if ((int)__builtin_popcount(cur.loaded_mask) == N)
+        if ((int)__builtin_popcount(cur.loadedMask) == N)
         {
             goal_out = cur;
             return true;
@@ -327,14 +333,15 @@ bool Greedy_search(State start, State &goal_out, map<string, ParentInfo> &parent
         {
             State nxt = cur;
             nxt.stacks[a.stack_id].push_back(a.cid);
-            nxt.loaded_mask |= (1u << a.cid);
-            nxt.g_cost = cur.g_cost + LOAD_COST;
+            nxt.loadedMask |= (1u << a.cid);
+            nxt.g_cost = cur.g_cost + loadingUnloadingCost;
             string k = state_key(nxt);
             if (visited.count(k))
                 continue;
             // heuristic: prefer fewer dest-blocks and weight violations (soft)
             auto dv = count_dest_and_weight_violations(nxt);
-            int heuristic = dv.first * 5 + dv.second * 2 + (N - __builtin_popcount(nxt.loaded_mask)); // weighted
+            // heurisitv : h = 5*dest_blocks + 2*weight_inversions + remaining_containers
+            int heuristic = dv.first * 5 + dv.second * 2 + (N - __builtin_popcount(nxt.loadedMask)); // weighted
             parent_map[k] = {ck, a, nxt.g_cost};
             pq.push({nxt, heuristic});
         }
@@ -359,7 +366,7 @@ struct ACmp
     }
 };
 
-bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = BFS_NODE_LIMIT)
+bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_map, int &expanded_nodes, int node_limit = bfsNodeLim)
 {
     priority_queue<ANode, vector<ANode>, ACmp> pq;
     unordered_map<string, int> bestg;
@@ -367,7 +374,7 @@ bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_
     expanded_nodes = 0;
 
     auto initial_dv = count_dest_and_weight_violations(start);
-    int h0 = initial_dv.first * 5 + initial_dv.second * 2 + (N - __builtin_popcount(start.loaded_mask));
+    int h0 = initial_dv.first * 5 + initial_dv.second * 2 + (N - __builtin_popcount(start.loadedMask));
     pq.push({start, 0, h0});
     bestg[state_key(start)] = 0;
     parent_map[state_key(start)] = {"", {-1, -1}, 0};
@@ -385,7 +392,7 @@ bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_
         expanded_nodes++;
         if (expanded_nodes > node_limit)
             return false;
-        if ((int)__builtin_popcount(cur.loaded_mask) == N)
+        if ((int)__builtin_popcount(cur.loadedMask) == N)
         {
             goal_out = cur;
             return true;
@@ -396,15 +403,15 @@ bool Astar_search(State start, State &goal_out, map<string, ParentInfo> &parent_
         {
             State nxt = cur;
             nxt.stacks[a.stack_id].push_back(a.cid);
-            nxt.loaded_mask |= (1u << a.cid);
-            int newg = curg + LOAD_COST;
+            nxt.loadedMask |= (1u << a.cid);
+            int newg = curg + loadingUnloadingCost;
             string k = state_key(nxt);
             if (bestg.count(k) && newg >= bestg[k])
                 continue;
             bestg[k] = newg;
             // heuristic: penalize destination blocks more, weight violations somewhat, and remaining loads
             auto dv = count_dest_and_weight_violations(nxt);
-            int hn = dv.first * 5 + dv.second * 2 + (N - __builtin_popcount(nxt.loaded_mask));
+            int hn = dv.first * 5 + dv.second * 2 + (N - __builtin_popcount(nxt.loadedMask));
             parent_map[k] = {ck, a, newg};
             pq.push({nxt, newg, hn});
         }
@@ -419,10 +426,10 @@ vector<Action> reconstruct_actions(const map<string, ParentInfo> &parent_map, co
     string cur = goal_key;
     if (!parent_map.count(cur))
         return seq;
-    while (!parent_map.at(cur).parent_key.empty())
+    while (!parent_map.at(cur).parentKey.empty())
     {
         seq.push_back(parent_map.at(cur).action);
-        cur = parent_map.at(cur).parent_key;
+        cur = parent_map.at(cur).parentKey;
     }
     reverse(seq.begin(), seq.end());
     return seq;
@@ -452,17 +459,17 @@ void run_and_report(DualOut &out, const string &name,
     out << "Solution found.\n";
     out << "Nodes expanded: " << expanded << "\n";
     out << "Time (ms): " << ms << "\n";
-    int loads = __builtin_popcount(goal.loaded_mask);
+    int loads = __builtin_popcount(goal.loadedMask);
     // report violations (should be zero for balance and weight because we enforce them; dest-blocks may exist)
     auto dv = count_dest_and_weight_violations(goal);
     int balv = count_balance_violation(goal);
     int total_viol = dv.first + dv.second + balv;
-    int total_cost = loads * LOAD_COST + total_viol * PENALTY_UNIT;
-    out << "Loads performed: " << loads << " (each load cost=" << LOAD_COST << ")\n";
+    int total_cost = loads * loadingUnloadingCost + total_viol * penaltyCost;
+    out << "Loads performed: " << loads << " (each load cost=" << loadingUnloadingCost << ")\n";
     out << "Destination blocks: " << dv.first << "\n";
     out << "Weight inversions: " << dv.second << "\n";
     out << "Balance violations: " << balv << " (should be 0 since balance is hard)\n";
-    out << "Total violations (for reporting): " << total_viol << " (penalty each = " << PENALTY_UNIT << ")\n";
+    out << "Total violations (for reporting): " << total_viol << " (penalty each = " << penaltyCost << ")\n";
     out << "Total cost = " << total_cost << "\n";
 
     string gkey = state_key(goal);
@@ -470,16 +477,16 @@ void run_and_report(DualOut &out, const string &name,
     out << "Load sequence (cid weight dest -> stack):\n";
     int step = 0;
     State replay;
-    replay.stacks.assign(NUM_STACKS, {});
+    replay.stacks.assign(stacksNum, {});
     for (auto &a : actions)
     {
         ++step;
         replay.stacks[a.stack_id].push_back(a.cid);
-        replay.loaded_mask |= (1u << a.cid);
+        replay.loadedMask |= (1u << a.cid);
         out << step << ". cid=" << a.cid << " (w=" << containers[a.cid].weight << " d=" << containers[a.cid].dest << ") -> stack " << a.stack_id << "\n";
     }
     out << "Final stacks:\n";
-    for (int s = 0; s < NUM_STACKS; ++s)
+    for (int s = 0; s < stacksNum; ++s)
     {
         out << "Stack " << s << ": ";
         for (int c : goal.stacks[s])
@@ -507,15 +514,15 @@ int main()
     }
 
     // input format:
-    // <num_stacks> <max_height> <balance_limit>   (num_stacks ignored; we fixed to 4)
+    // <stacksNum> <maximumHeight> <balanceLim>   (stacksNum ignored; we fixed to 4)
     // <num_containers>
     // <weight_0> <dest_0>
     // ...
-    int input_num_stacks;
-    fin >> input_num_stacks >> MAX_HEIGHT >> BALANCE_LIMIT;
+    int input_stacksNum;
+    fin >> input_stacksNum >> maximumHeight >> balanceLim;
     fin >> N;
     containers.assign(N, {0, 0});
-    dout << "num_stacks=" << NUM_STACKS << " max_height=" << MAX_HEIGHT << " balance_limit=" << BALANCE_LIMIT << "\n";
+    dout << "stacksNum=" << stacksNum << " maximumHeight=" << maximumHeight << " balanceLim=" << balanceLim << "\n";
     dout << "n_containers=" << N << "\n";
     dout << "Containers listing (cid weight dest):\n";
     for (int i = 0; i < N; ++i)
@@ -525,29 +532,29 @@ int main()
     }
     fin.close();
 
-    if (N > NUM_STACKS * MAX_HEIGHT)
+    if (N > stacksNum * maximumHeight)
     {
-        dout << "Error: too many containers (" << N << ") for ship capacity " << NUM_STACKS * MAX_HEIGHT << "\n";
+        dout << "Error: too many containers (" << N << ") for ship capacity " << stacksNum * maximumHeight << "\n";
         return 1;
     }
 
     State start;
-    start.stacks.assign(NUM_STACKS, {});
-    start.loaded_mask = 0;
+    start.stacks.assign(stacksNum, {});
+    start.loadedMask = 0;
     start.g_cost = 0;
 
     // wrap functions to match run_and_report signature
     auto bfs_wrapper = [&](State &s, State &g, map<string, ParentInfo> &pm, int &expanded)
     {
-        return BFS_search(s, g, pm, expanded, BFS_NODE_LIMIT);
+        return BFS_search(s, g, pm, expanded, bfsNodeLim);
     };
     auto greedy_wrapper = [&](State &s, State &g, map<string, ParentInfo> &pm, int &expanded)
     {
-        return Greedy_search(s, g, pm, expanded, BFS_NODE_LIMIT);
+        return Greedy_search(s, g, pm, expanded, bfsNodeLim);
     };
     auto astar_wrapper = [&](State &s, State &g, map<string, ParentInfo> &pm, int &expanded)
     {
-        return Astar_search(s, g, pm, expanded, BFS_NODE_LIMIT);
+        return Astar_search(s, g, pm, expanded, bfsNodeLim);
     };
 
     run_and_report(dout, "BFS (hard constraints, full search limited by node limit)", bfs_wrapper, start);
