@@ -2,6 +2,9 @@
 
 ### AI Assignment 1 | Roll - MT24035 | IIIT Delhi
 
+- Github Repo for Code , Reports & PPT - https://github.com/gkdey17cse/AI_Assignment_2025/tree/main/Assignment_1 
+- Video Presentation Link - https://drive.google.com/file/d/1GufYp7gr4QUrGxGV_8A7C247bMzHQQYP/view?usp=sharing 
+
 ---
 
 ## 1. Overview
