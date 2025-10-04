@@ -2,4 +2,6 @@
 *.o
 *.mp4
 *.mp3
-
+*.acc
+Script.pdf
+*.zip
