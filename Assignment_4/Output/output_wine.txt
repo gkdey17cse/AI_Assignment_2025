@@ -1,0 +1,331 @@
+WINE DATASET - COMPREHENSIVE ANALYSIS
+============================================================
+
+STEP 1: Loading and Exploring Wine Dataset
+Dataset Shape: (178, 13)
+Number of Features: 13
+Features: ['alcohol', 'malic_acid', 'ash', 'alcalinity_of_ash', 'magnesium', 'total_phenols', 'flavanoids', 'nonflavanoid_phenols', 'proanthocyanins', 'color_intensity', 'hue', 'od280/od315_of_diluted_wines', 'proline']
+Target Classes: [np.str_('class_0'), np.str_('class_1'), np.str_('class_2')]
+Class Distribution: [59 71 48]
+
+Dataset Overview:
+Total samples: 178
+Number of features: 13
+Number of classes: 3
+
+First 5 rows of the dataset:
+   alcohol  malic_acid   ash  alcalinity_of_ash  magnesium  total_phenols  \
+0    14.23        1.71  2.43               15.6      127.0           2.80   
+1    13.20        1.78  2.14               11.2      100.0           2.65   
+2    13.16        2.36  2.67               18.6      101.0           2.80   
+3    14.37        1.95  2.50               16.8      113.0           3.85   
+4    13.24        2.59  2.87               21.0      118.0           2.80   
+
+   flavanoids  nonflavanoid_phenols  proanthocyanins  color_intensity   hue  \
+0        3.06                  0.28             2.29             5.64  1.04   
+1        2.76                  0.26             1.28             4.38  1.05   
+2        3.24                  0.30             2.81             5.68  1.03   
+3        3.49                  0.24             2.18             7.80  0.86   
+4        2.69                  0.39             1.82             4.32  1.04   
+
+   od280/od315_of_diluted_wines  proline  target wine_class  
+0                          3.92   1065.0       0    class_0  
+1                          3.40   1050.0       0    class_0  
+2                          3.17   1185.0       0    class_0  
+3                          3.45   1480.0       0    class_0  
+4                          2.93    735.0       0    class_0  
+
+Dataset Statistics:
+          alcohol  malic_acid         ash  alcalinity_of_ash   magnesium  \
+count  178.000000  178.000000  178.000000         178.000000  178.000000   
+mean    13.000618    2.336348    2.366517          19.494944   99.741573   
+std      0.811827    1.117146    0.274344           3.339564   14.282484   
+min     11.030000    0.740000    1.360000          10.600000   70.000000   
+25%     12.362500    1.602500    2.210000          17.200000   88.000000   
+50%     13.050000    1.865000    2.360000          19.500000   98.000000   
+75%     13.677500    3.082500    2.557500          21.500000  107.000000   
+max     14.830000    5.800000    3.230000          30.000000  162.000000   
+
+       total_phenols  flavanoids  nonflavanoid_phenols  proanthocyanins  \
+count     178.000000  178.000000            178.000000       178.000000   
+mean        2.295112    2.029270              0.361854         1.590899   
+std         0.625851    0.998859              0.124453         0.572359   
+min         0.980000    0.340000              0.130000         0.410000   
+25%         1.742500    1.205000              0.270000         1.250000   
+50%         2.355000    2.135000              0.340000         1.555000   
+75%         2.800000    2.875000              0.437500         1.950000   
+max         3.880000    5.080000              0.660000         3.580000   
+
+       color_intensity         hue  od280/od315_of_diluted_wines      proline  \
+count       178.000000  178.000000                    178.000000   178.000000   
+mean          5.058090    0.957449                      2.611685   746.893258   
+std           2.318286    0.228572                      0.709990   314.907474   
+min           1.280000    0.480000                      1.270000   278.000000   
+25%           3.220000    0.782500                      1.937500   500.500000   
+50%           4.690000    0.965000                      2.780000   673.500000   
+75%           6.200000    1.120000                      3.170000   985.000000   
+max          13.000000    1.710000                      4.000000  1680.000000   
+
+           target  
+count  178.000000  
+mean     0.938202  
+std      0.775035  
+min      0.000000  
+25%      0.000000  
+50%      1.000000  
+75%      2.000000  
+max      2.000000  
+
+============================================================
+DATA PREPROCESSING
+============================================================
+
+STEP 2: Data Preprocessing
+Training set size: 142
+Test set size: 36
+Training set class distribution: [47 57 38]
+Test set class distribution: [12 14 10]
+
+Feature Correlation Analysis:
+  total_phenols - flavanoids: 0.865
+  flavanoids - od280/od315_of_diluted_wines: 0.787
+
+STEP 3: Data Visualization
+Data visualizations saved to '../Output/Plots/Wine/'
+
+============================================================
+NAIVE BAYES CLASSIFIER - WINE DATASET
+============================================================
+
+STEP 1: Naive Bayes Hyperparameter Tuning with Cross-Validation
+Cross-validation Results:
+  var_smoothing=1e-09: Mean CV Accuracy = 0.9719
+  var_smoothing=1e-08: Mean CV Accuracy = 0.9719
+  var_smoothing=1e-07: Mean CV Accuracy = 0.9719
+  var_smoothing=1e-06: Mean CV Accuracy = 0.9719
+  var_smoothing=1e-05: Mean CV Accuracy = 0.9719
+  var_smoothing=0.0001: Mean CV Accuracy = 0.9719
+  var_smoothing=0.001: Mean CV Accuracy = 0.9719
+  var_smoothing=0.01: Mean CV Accuracy = 0.9719
+  var_smoothing=0.1: Mean CV Accuracy = 0.9719
+
+Best Hyperparameters: {'var_smoothing': 1e-09}
+Best Cross-validation Score: 0.9719
+
+STEP 2: Training Final Naive Bayes Model
+Training time: 0.0030 seconds
+
+STEP 3: Naive Bayes Model Evaluation
+Performance Metrics:
+Accuracy: 0.9722
+Precision: 0.9744
+Recall: 0.9722
+F1-Score: 0.9723
+
+Detailed Classification Report:
+              precision    recall  f1-score   support
+
+     class_0       0.92      1.00      0.96        12
+     class_1       1.00      0.93      0.96        14
+     class_2       1.00      1.00      1.00        10
+
+    accuracy                           0.97        36
+   macro avg       0.97      0.98      0.97        36
+weighted avg       0.97      0.97      0.97        36
+
+
+STEP 4: Naive Bayes Confusion Matrix
+Confusion Matrix:
+[[12  0  0]
+ [ 1 13  0]
+ [ 0  0 10]]
+
+STEP 5: Feature Importance Analysis
+Class-wise Feature Means:
+  class_0: [ 0.91286681 -0.25204636  0.34461678 -0.7357081   0.45342864]...
+  class_1: [-0.86797437 -0.38783847 -0.48196719  0.23827145 -0.34902859]...
+  class_2: [ 0.17288945  0.89349926  0.29671424  0.55254758 -0.03727675]...
+
+Class-wise Feature Variances:
+  class_0: [0.35756412 0.46299221 0.7763207  0.62234058 0.52578853]...
+  class_1: [0.44622031 0.89040364 1.12168935 0.98047031 1.44259055]...
+  class_2: [0.43460882 0.72604613 0.51075579 0.43646976 0.48422621]...
+
+STEP 6: Final Cross-validation Performance
+Cross-validation scores: [1.         0.93103448 1.         0.92857143 1.        ]
+Mean CV accuracy: 0.9719 (+/- 0.0688)
+
+============================================================
+NAIVE BAYES ANALYSIS COMPLETED SUCCESSFULLY
+============================================================
+
+============================================================
+DECISION TREE CLASSIFIER - WINE DATASET
+============================================================
+
+STEP 1: Decision Tree Hyperparameter Tuning with Cross-Validation
+Best Decision Tree Hyperparameters:
+  {'ccp_alpha': 0.0, 'criterion': 'gini', 'max_depth': 3, 'max_features': None, 'min_samples_leaf': 2, 'min_samples_split': 2}
+Best Cross-validation Score: 0.9303
+
+STEP 2: Training Final Decision Tree Model
+Training time: 0.0040 seconds
+
+OVERFITTING ANALYSIS:
+Training Accuracy: 0.9859
+
+STEP 3: Decision Tree Model Evaluation
+Performance Metrics:
+Training Accuracy: 0.9859
+Test Accuracy: 1.0000
+Overfitting Gap (Train - Test): -0.0141
+Precision: 1.0000
+Recall: 1.0000
+F1-Score: 1.0000
+
+WARNING: Perfect test accuracy detected!
+   Investigating potential causes...
+   Tree Complexity: 13 total nodes, 7 leaves, depth 3
+   Training samples: 142, Test samples: 36
+   Leaves per training sample: 0.0493
+   Tree complexity seems reasonable
+Detailed Classification Report:
+              precision    recall  f1-score   support
+
+     class_0       1.00      1.00      1.00        12
+     class_1       1.00      1.00      1.00        14
+     class_2       1.00      1.00      1.00        10
+
+    accuracy                           1.00        36
+   macro avg       1.00      1.00      1.00        36
+weighted avg       1.00      1.00      1.00        36
+
+
+STEP 4: Decision Tree Confusion Matrix
+Confusion Matrix:
+[[12  0  0]
+ [ 0 14  0]
+ [ 0  0 10]]
+
+STEP 5: Data Integrity Investigation
+Data Distribution Analysis:
+  Training set class distribution: [47 57 38]
+  Test set class distribution: [12 14 10]
+  PCA explained variance: 0.551
+
+STEP 6: Alternative Validation with Different Split
+Alternative Split Results:
+  Training Accuracy: 0.9930
+  Test Accuracy: 0.9167
+  Overfitting Gap: 0.0763
+  More realistic: 0.9167 test accuracy
+
+STEP 7: Feature Importance Analysis
+All Feature Importance Scores:
+  flavanoids: 0.4309
+  color_intensity: 0.4283
+  proline: 0.1144
+  total_phenols: 0.0265
+  alcohol: 0.0000
+  malic_acid: 0.0000
+  ash: 0.0000
+  alcalinity_of_ash: 0.0000
+  magnesium: 0.0000
+  nonflavanoid_phenols: 0.0000
+  proanthocyanins: 0.0000
+  hue: 0.0000
+  od280/od315_of_diluted_wines: 0.0000
+Features actually used (importance > 0.001): 4/13
+
+STEP 8: Final Assessment
+CONCLUSION: Realistic performance - Test accuracy: 0.9167
+
+============================================================
+DECISION TREE ANALYSIS COMPLETED
+============================================================
+
+============================================================
+MLP CLASSIFIER - WINE DATASET
+============================================================
+
+STEP 1: MLP Hyperparameter Tuning with Cross-Validation
+Best MLP Hyperparameters:
+  {'activation': 'relu', 'alpha': 0.001, 'early_stopping': True, 'hidden_layer_sizes': (50,), 'learning_rate_init': 0.001, 'max_iter': 1000, 'n_iter_no_change': 20, 'solver': 'lbfgs', 'validation_fraction': 0.1}
+Best Cross-validation Score: 0.9931
+
+STEP 2: Training Final MLP Model
+Training time: 0.0221 seconds
+Final training loss: 0.000314
+Number of iterations: 11
+Converged: True
+
+STEP 3: MLP Model Evaluation
+Performance Metrics:
+Accuracy: 0.9444
+Precision: 0.9466
+Recall: 0.9444
+F1-Score: 0.9443
+
+Detailed Classification Report:
+              precision    recall  f1-score   support
+
+     class_0       0.92      1.00      0.96        12
+     class_1       0.93      0.93      0.93        14
+     class_2       1.00      0.90      0.95        10
+
+    accuracy                           0.94        36
+   macro avg       0.95      0.94      0.95        36
+weighted avg       0.95      0.94      0.94        36
+
+
+STEP 4: MLP Confusion Matrix
+Confusion Matrix:
+[[12  0  0]
+ [ 1 13  0]
+ [ 0  1  9]]
+
+STEP 5: MLP Training History Visualization
+
+STEP 6: MLP Feature Importance Analysis
+Top 10 Feature Importance (Permutation Importance):
+  proline: 0.0444
+  alcohol: 0.0222
+  alcalinity_of_ash: 0.0194
+  proanthocyanins: 0.0139
+  flavanoids: 0.0056
+  hue: 0.0000
+  ash: -0.0028
+  color_intensity: -0.0056
+  od280/od315_of_diluted_wines: -0.0056
+  malic_acid: -0.0111
+
+STEP 7: Final Cross-validation Performance
+Cross-validation scores: [1.         0.96551724 1.         1.         1.        ]
+Mean CV accuracy: 0.9931 (+/- 0.0276)
+
+STEP 8: Probability Analysis
+First 5 test samples prediction probabilities:
+  Sample 1: True=class_0, Predicted=class_0, Probabilities=[9.99999995e-01 1.79901417e-10 4.37453179e-09]
+  Sample 2: True=class_2, Predicted=class_1, Probabilities=[2.29584337e-04 9.27771407e-01 7.19990085e-02]
+  Sample 3: True=class_0, Predicted=class_0, Probabilities=[9.99999604e-01 1.18888927e-07 2.77236814e-07]
+  Sample 4: True=class_1, Predicted=class_0, Probabilities=[6.35962599e-01 3.64022380e-01 1.50215456e-05]
+  Sample 5: True=class_1, Predicted=class_1, Probabilities=[1.12989655e-05 9.99986402e-01 2.29933904e-06]
+
+============================================================
+MLP ANALYSIS COMPLETED SUCCESSFULLY
+============================================================
+
+============================================================
+FINAL SUMMARY - ALL THREE MODELS (CORRECTED)
+============================================================
+
+Model Performance Summary (Realistic Values):
+        Model Realistic Test Accuracy Initial Test Accuracy Precision Recall F1-Score Training Time (s) Mean CV Score
+  Naive Bayes                  0.9722                0.9722    0.9744 0.9722   0.9723            0.0030        0.9719
+Decision Tree                  0.9167                1.0000    1.0000 1.0000   1.0000            0.0040        0.9303
+          MLP                  0.9444                0.9444    0.9466 0.9444   0.9443            0.0221        0.9931
+
+IMPORTANT NOTE:
+Decision Tree showed 100% accuracy on initial test split due to lucky data partitioning.
+Realistic performance (alternative split): 0.9167
+This demonstrates the importance of multiple validation strategies.

@@ -1,0 +1,283 @@
+ADULT INCOME DATASET - COMPREHENSIVE ANALYSIS
+============================================================
+
+STEP 1: Loading and Exploring Adult Dataset
+Dataset loaded successfully from: https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
+Dataset Shape: (32561, 15)
+Number of Features: 14
+Features: ['age', 'workclass', 'fnlwgt', 'education', 'education-num', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'capital-gain', 'capital-loss', 'hours-per-week', 'native-country']
+Target Variable: income
+
+Dataset Overview:
+Total samples: 32561
+Number of features: 14
+Target classes: ['<=50K' '>50K']
+
+First 5 rows of the dataset:
+   age         workclass  fnlwgt  education  education-num  \
+0   39         State-gov   77516  Bachelors             13   
+1   50  Self-emp-not-inc   83311  Bachelors             13   
+2   38           Private  215646    HS-grad              9   
+3   53           Private  234721       11th              7   
+4   28           Private  338409  Bachelors             13   
+
+       marital-status         occupation   relationship   race     sex  \
+0       Never-married       Adm-clerical  Not-in-family  White    Male   
+1  Married-civ-spouse    Exec-managerial        Husband  White    Male   
+2            Divorced  Handlers-cleaners  Not-in-family  White    Male   
+3  Married-civ-spouse  Handlers-cleaners        Husband  Black    Male   
+4  Married-civ-spouse     Prof-specialty           Wife  Black  Female   
+
+   capital-gain  capital-loss  hours-per-week native-country income  
+0          2174             0              40  United-States  <=50K  
+1             0             0              13  United-States  <=50K  
+2             0             0              40  United-States  <=50K  
+3             0             0              40  United-States  <=50K  
+4             0             0              40           Cuba  <=50K  
+
+Dataset Statistics for Numerical Features:
+                age        fnlwgt  education-num  capital-gain  capital-loss  \
+count  32561.000000  3.256100e+04   32561.000000  32561.000000  32561.000000   
+mean      38.581647  1.897784e+05      10.080679   1077.648844     87.303830   
+std       13.640433  1.055500e+05       2.572720   7385.292085    402.960219   
+min       17.000000  1.228500e+04       1.000000      0.000000      0.000000   
+25%       28.000000  1.178270e+05       9.000000      0.000000      0.000000   
+50%       37.000000  1.783560e+05      10.000000      0.000000      0.000000   
+75%       48.000000  2.370510e+05      12.000000      0.000000      0.000000   
+max       90.000000  1.484705e+06      16.000000  99999.000000   4356.000000   
+
+       hours-per-week  
+count    32561.000000  
+mean        40.437456  
+std         12.347429  
+min          1.000000  
+25%         40.000000  
+50%         40.000000  
+75%         45.000000  
+max         99.000000  
+
+Missing Values Analysis:
+age               0
+workclass         0
+fnlwgt            0
+education         0
+education-num     0
+marital-status    0
+occupation        0
+relationship      0
+race              0
+sex               0
+capital-gain      0
+capital-loss      0
+hours-per-week    0
+native-country    0
+income            0
+dtype: int64
+
+============================================================
+DATA PREPROCESSING
+============================================================
+
+STEP 2: Data Preprocessing and Cleaning
+Encoding categorical variables...
+Target classes mapping: {0: '<=50K', 1: '>50K'}
+Final feature matrix shape: (32561, 14)
+Target distribution: [24720  7841]
+Class names: ['<=50K', '>50K']
+Training set size: 26048
+Test set size: 6513
+Training set class distribution: [19775  6273]
+Test set class distribution: [4945 1568]
+
+STEP 3: Data Visualization
+Data visualizations completed and saved.
+
+============================================================
+NAIVE BAYES CLASSIFIER - ADULT DATASET
+============================================================
+
+STEP 1: Naive Bayes Hyperparameter Tuning
+Best Naive Bayes Hyperparameters:
+  {'var_smoothing': 0.1}
+Best Cross-validation Score: 0.8175
+
+STEP 2: Training Final Naive Bayes Model
+Training time: 0.0120 seconds
+
+STEP 3: Naive Bayes Model Evaluation
+Performance Metrics:
+Accuracy: 0.8225
+Precision: 0.8143
+Recall: 0.8225
+F1-Score: 0.7995
+
+Detailed Classification Report:
+              precision    recall  f1-score   support
+
+       <=50K       0.83      0.96      0.89      4945
+        >50K       0.76      0.38      0.51      1568
+
+    accuracy                           0.82      6513
+   macro avg       0.80      0.67      0.70      6513
+weighted avg       0.81      0.82      0.80      6513
+
+
+STEP 4: Naive Bayes Confusion Matrix
+Confusion Matrix:
+[[4758  187]
+ [ 969  599]]
+
+STEP 5: Final Cross-validation Performance
+Cross-validation scores: ['0.8152', '0.8177', '0.8228', '0.8069', '0.8249']
+Mean CV accuracy: 0.8175 (+/- 0.0127)
+
+============================================================
+NAIVE BAYES ANALYSIS COMPLETED
+============================================================
+
+============================================================
+DECISION TREE CLASSIFIER - ADULT DATASET
+============================================================
+
+STEP 1: Decision Tree Hyperparameter Tuning
+Best Decision Tree Hyperparameters:
+  {'criterion': 'gini', 'max_depth': 7, 'max_features': None, 'min_samples_leaf': 4, 'min_samples_split': 2}
+Best Cross-validation Score: 0.8529
+
+STEP 2: Training Final Decision Tree Model
+Training time: 0.0826 seconds
+Training Accuracy: 0.8569
+
+STEP 3: Decision Tree Model Evaluation
+Performance Metrics:
+Training Accuracy: 0.8569
+Test Accuracy: 0.8604
+Overfitting Gap (Train - Test): -0.0036
+Precision: 0.8557
+Recall: 0.8604
+F1-Score: 0.8505
+
+Detailed Classification Report:
+              precision    recall  f1-score   support
+
+       <=50K       0.87      0.96      0.91      4945
+        >50K       0.81      0.55      0.65      1568
+
+    accuracy                           0.86      6513
+   macro avg       0.84      0.75      0.78      6513
+weighted avg       0.86      0.86      0.85      6513
+
+
+STEP 4: Decision Tree Confusion Matrix
+Confusion Matrix:
+[[4742  203]
+ [ 706  862]]
+
+STEP 5: Feature Importance Analysis
+Top 10 Feature Importance Scores:
+  relationship: 0.4212
+  education-num: 0.2196
+  capital-gain: 0.2159
+  capital-loss: 0.0519
+  age: 0.0435
+  hours-per-week: 0.0395
+  occupation: 0.0044
+  fnlwgt: 0.0019
+  workclass: 0.0011
+  native-country: 0.0004
+
+STEP 6: Final Cross-validation Performance
+Cross-validation scores: ['0.8560', '0.8512', '0.8576', '0.8553', '0.8512']
+Mean CV accuracy: 0.8543 (+/- 0.0052)
+
+============================================================
+DECISION TREE ANALYSIS COMPLETED
+============================================================
+
+============================================================
+MLP CLASSIFIER - ADULT DATASET
+============================================================
+
+STEP 1: MLP Hyperparameter Tuning with Cross-Validation
+Best MLP Hyperparameters:
+  {'activation': 'relu', 'alpha': 0.1, 'early_stopping': True, 'hidden_layer_sizes': (50,), 'learning_rate_init': 0.01, 'max_iter': 500, 'n_iter_no_change': 20, 'solver': 'adam', 'validation_fraction': 0.1}
+Best Cross-validation Score: 0.8485
+
+STEP 2: Training Final MLP Model
+Training time: 2.1939 seconds
+Final training loss: 0.327455
+Number of iterations: 40
+Converged: True
+
+STEP 3: MLP Model Evaluation
+Performance Metrics:
+Accuracy: 0.8571
+Precision: 0.8507
+Recall: 0.8571
+F1-Score: 0.8497
+
+Detailed Classification Report:
+              precision    recall  f1-score   support
+
+       <=50K       0.88      0.94      0.91      4945
+        >50K       0.77      0.58      0.66      1568
+
+    accuracy                           0.86      6513
+   macro avg       0.82      0.76      0.79      6513
+weighted avg       0.85      0.86      0.85      6513
+
+
+STEP 4: MLP Confusion Matrix
+Confusion Matrix:
+[[4672  273]
+ [ 658  910]]
+
+STEP 5: MLP Training Analysis
+Final training loss: 0.327455
+Top 5 Feature Importance (Permutation):
+  education-num: 0.0549
+  capital-gain: 0.0398
+  marital-status: 0.0281
+  age: 0.0221
+  hours-per-week: 0.0144
+
+STEP 6: Final Cross-validation Performance
+Cross-validation scores: ['0.8468', '0.8453', '0.8514', '0.8476', '0.8476']
+Mean CV accuracy: 0.8477 (+/- 0.0041)
+
+============================================================
+MLP ANALYSIS COMPLETED SUCCESSFULLY
+============================================================
+
+============================================================
+FINAL SUMMARY - ALL THREE MODELS
+============================================================
+
+Model Performance Comparison:
+        Model  Test Accuracy  Precision   Recall  F1-Score  Training Time (s)  Mean CV Score
+  Naive Bayes       0.822509   0.814258 0.822509  0.799530           0.011974       0.817491
+Decision Tree       0.860433   0.855720 0.860433  0.850479           0.082554       0.854269
+          MLP       0.857055   0.850711 0.857055  0.849731           2.193856       0.847743
+
+BEST PERFORMING MODEL: Decision Tree
+Best Test Accuracy: 0.8604
+
+KEY INSIGHTS:
+1. Model Performance Ranking (by Test Accuracy):
+   Decision Tree: 0.8604
+   MLP: 0.8571
+   Naive Bayes: 0.8225
+
+2. Training Efficiency Ranking (by Training Time):
+   Naive Bayes: 0.0120s
+   Decision Tree: 0.0826s
+   MLP: 2.1939s
+
+3. Consistency Ranking (by CV Score vs Test Accuracy):
+   Naive Bayes: CV-Test gap = 0.0050
+   Decision Tree: CV-Test gap = 0.0062
+   MLP: CV-Test gap = 0.0093
+
+============================================================
+ANALYSIS COMPLETED SUCCESSFULLY
+============================================================
